@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Water } from '../../services/water'; // Import the Water service
+import { Water } from '../../services/water'; 
 
 @Component({
   selector: 'app-reading-table',
@@ -10,22 +10,18 @@ import { Water } from '../../services/water'; // Import the Water service
   imports: [CommonModule]
 })
 export class ReadingTableComponent implements OnInit {
-
-  // 1. Initialize as an empty array (removed the hardcoded data)
   readings: any[] = [];
 
-  // 2. Inject the Water Service
   constructor(private waterService: Water) {}
 
-  // 3. Fetch data from backend when the page loads
   ngOnInit() {
     this.waterService.getAll().subscribe({
       next: (data) => {
+        console.log('Data received from backend:', data); // Check your browser console for this!
         this.readings = data;
-        console.log('Readings fetched:', data);
       },
       error: (err) => {
-        console.error('Error fetching readings:', err);
+        console.error('Error fetching data:', err); // Check console for red errors
       }
     });
   }
