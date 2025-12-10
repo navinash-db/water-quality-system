@@ -4,18 +4,22 @@
   <table>
     <thead>
       <tr>
+        <th>ID</th>
         <th>pH</th>
         <th>Turbidity</th>
         <th>Temperature</th>
         <th>TDS (ppm)</th>
+        <th>Quality</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let r of readings">
+        <td>{{ r.id }}</td>
         <td>{{ r.ph }}</td>
         <td>{{ r.turbidity }}</td>
         <td>{{ r.temperature }}</td>
         <td>{{ r.tds }}</td>
+        <td>{{ r.quality }}</td>
       </tr>
     </tbody>
   </table>
