@@ -1,9 +1,15 @@
-<div style="padding: 20px;">
-  <h1>Dashboard</h1>
-  <p>Welcome to the Water Quality Monitoring System!</p>
+<div class="page">
+  <div class="header-section">
+    <h1>Water Quality Dashboard</h1>
+    <p>Real-time monitoring and predictive analysis of linear water processes.</p>
+  </div>
 
-  <div style="display:flex; gap:15px; margin-top:20px;">
-    <button class="btn-green" (click)="goToAddReading()">Add New Reading</button>
-    <button class="btn" style="width:200px;" (click)="goToReadings()">View Readings</button>
+  <div class="card chart-container">
+    <canvas #phChart></canvas>
+  </div>
+
+  <div class="button-row">
+    <button class="btn-green" (click)="goToAddReading()">+ Add New Reading</button>
+    <button class="btn" (click)="goToReadings()">View All Data</button>
   </div>
 </div>
