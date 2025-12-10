@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+// 1. Add ChangeDetectorRef to the imports
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; 
 import { Water } from '../../services/water'; 
 
 @Component({
@@ -12,16 +13,20 @@ import { Water } from '../../services/water';
 export class ReadingTableComponent implements OnInit {
   readings: any[] = [];
 
-  constructor(private waterService: Water) {}
+  // 2. Inject ChangeDetectorRef in the constructor
+  constructor(private waterService: Water, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.waterService.getAll().subscribe({
       next: (data) => {
-        console.log('Data received from backend:', data); // Check your browser console for this!
+        console.log('Data received from backend:', data);
         this.readings = data;
+        
+        // 3. THIS IS THE KEY FIX: Force Angular to update the screen
+        this.cdr.detectChanges(); 
       },
       error: (err) => {
-        console.error('Error fetching data:', err); // Check console for red errors
+        console.error('Error fetching data:', err);
       }
     });
   }
