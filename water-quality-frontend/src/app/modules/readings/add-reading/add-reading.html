@@ -1,0 +1,50 @@
+<app-navbar></app-navbar>
+
+<div class="page">
+  <div class="form-card">
+    <h2>Add Water Reading</h2>
+    <form (ngSubmit)="addReading()">
+      <div class="form-group">
+        <label>Location</label>
+        <input
+          type="text"
+          [(ngModel)]="reading.location"
+          name="location"
+          required
+          placeholder="e.g. Tank 1"
+        />
+      </div>
+
+      <div class="form-group">
+        <label>pH Level (0-14)</label>
+        <input type="number" [(ngModel)]="reading.ph" name="ph" min="0" max="14" required />
+      </div>
+
+      <div class="form-group">
+        <label>Turbidity (NTU)</label>
+        <input type="number" [(ngModel)]="reading.turbidity" name="turbidity" min="0" required />
+      </div>
+
+      <div class="form-group">
+        <label>TDS (ppm)</label>
+        <input type="number" [(ngModel)]="reading.tds" name="tds" min="0" required />
+      </div>
+
+      <div class="form-group">
+        <label>Temperature (°C)</label>
+        <input
+          type="number"
+          [(ngModel)]="reading.temperature"
+          name="temperature"
+          min="-10"
+          max="100"
+          required
+        />
+      </div>
+
+      <div class="form-actions">
+        <button type="submit">Save Reading</button>
+      </div>
+    </form>
+  </div>
+</div>

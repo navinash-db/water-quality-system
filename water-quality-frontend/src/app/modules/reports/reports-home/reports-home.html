@@ -1,0 +1,36 @@
+<app-navbar></app-navbar>
+
+<h2>Reports</h2>
+
+<hr />
+
+<h3>Daily Report</h3>
+<input type="date" [(ngModel)]="dailyDate" />
+<button (click)="loadDaily()">View</button>
+<button (click)="exportDaily()">Export CSV</button>
+
+<div *ngIf="dailyReport">
+  <p>Date: {{ dailyReport.date }}</p>
+  <p>Total: {{ dailyReport.totalReadings }}</p>
+  <p>Good: {{ dailyReport.good }}</p>
+  <p>Moderate: {{ dailyReport.moderate }}</p>
+  <p>Poor: {{ dailyReport.poor }}</p>
+</div>
+
+<hr />
+
+<h3>Monthly Report</h3>
+<input type="month" [(ngModel)]="monthlyMonth" />
+<button (click)="loadMonthly()">View</button>
+<button (click)="exportMonthly()">Export CSV</button>
+<p *ngIf="!dailyReport && !monthlyReport">
+  Select a date or month to view report.
+</p>
+
+<div *ngIf="monthlyReport">
+  <p>Month: {{ monthlyReport.month }}</p>
+  <p>Total: {{ monthlyReport.totalReadings }}</p>
+  <p>Good: {{ monthlyReport.good }}</p>
+  <p>Moderate: {{ monthlyReport.moderate }}</p>
+  <p>Poor: {{ monthlyReport.poor }}</p>
+</div>

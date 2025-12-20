@@ -1,0 +1,57 @@
+<app-navbar></app-navbar>
+
+<div class="page">
+<h2>Alerts</h2>
+
+<div class="table-wrapper">
+  <p *ngIf="(alerts$ | async)?.length === 0" style="margin:20px;">
+  No alerts available.
+</p>
+<table border="1" width="100%">
+  <tr>
+    <th>ID</th>
+    <th>Message</th>
+    <th>Location</th>
+    <th>Quality</th>
+    <th>Status</th>
+    <th>Action</th>
+  </tr>
+
+  <tr *ngFor="let a of alerts$ | async"
+    class="alert-row"
+    [ngClass]="a.readStatus ? 'alert-read' : 'alert-unread'">
+
+  <td>{{ a.id }}</td>
+
+  <td class="alert-message">
+    {{ a.message }}
+  </td>
+
+  <td>{{ a.location }}</td>
+
+  <td>
+    <span class="badge poor">{{ a.quality }}</span>
+  </td>
+
+  <td>
+    {{ a.readStatus ? 'Read' : 'Unread' }}
+  </td>
+
+  <td class="alert-actions">
+    <button
+      *ngIf="!a.readStatus"
+      class="read"
+      (click)="markRead(a.id)">
+      Mark Read
+    </button>
+
+    <button
+      class="delete"
+      (click)="deleteAlert(a.id)">
+      Delete
+    </button>
+  </td>
+</tr>
+</table>
+</div>
+</div>

@@ -1,0 +1,11 @@
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 24px;
+}
+
+.dashboard-card {
+  /* No changes needed here if you updated global styles, 
+     but ensure it doesn't override the global defaults */
+  min-height: 300px;
+}

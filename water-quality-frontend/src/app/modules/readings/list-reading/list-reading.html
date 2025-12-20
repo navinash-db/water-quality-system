@@ -1,0 +1,48 @@
+<app-navbar></app-navbar>
+
+<div class="page">
+<h2>Water Readings</h2>
+<p *ngIf="(readings$ | async)?.length === 0" style="margin:20px;">
+  No water readings available.
+</p>
+<div class="table-wrapper">
+<table border="1" cellpadding="8">
+  <tr>
+    <th>ID</th>
+    <th>Location</th>
+    <th>pH</th>
+    <th>Turbidity</th>
+    <th>TDS</th>
+    <th>Temperature</th>
+    <th>Quality</th>
+    <th>Action</th>
+  </tr>
+
+  <ng-container *ngIf="readings$ | async as readings">
+    <tr *ngFor="let r of readings">
+      <td>{{ r.id }}</td>
+      <td>{{ r.location }}</td>
+      <td>{{ r.ph }}</td>
+      <td>{{ r.turbidity }}</td>
+      <td>{{ r.tds }}</td>
+      <td>{{ r.temperature }}</td>
+      <td>
+        <span class="badge" [ngClass]="{
+          good: r.quality === 'Good',
+          moderate: r.quality === 'Moderate',
+          poor: r.quality === 'Poor'
+        }">
+          {{ r.quality }}
+        </span>
+      </td>
+      <td>
+        <button [routerLink]="['/readings/edit', r.id]">Edit</button>
+        <button (click)="deleteReading(r.id)">
+  Delete
+</button>
+      </td>
+    </tr>
+  </ng-container>
+</table>
+</div>
+</div>
