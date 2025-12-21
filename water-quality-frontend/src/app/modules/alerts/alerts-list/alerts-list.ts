@@ -1,8 +1,7 @@
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Navbar } from '../../../shared/navbar/navbar'; // Adjust path if needed
 import { AlertService } from '../../../core/services/alert.service';
-import { Navbar } from '../../../shared/navbar/navbar';
 
 @Component({
   selector: 'app-alerts-list',
@@ -11,29 +10,44 @@ import { Navbar } from '../../../shared/navbar/navbar';
   templateUrl: './alerts-list.html',
   styleUrl: './alerts-list.css'
 })
-export class AlertsList {
+export class AlertsList implements OnInit {
 
-  alerts$!: Observable<any[]>;
+  // FIX: Define this as a simple array, NOT an Observable ($)
+  alerts: any[] = []; 
+  
+  // Modal State
+  showModal = false;
+  idToDelete: number | null = null;
 
-  constructor(private alertService: AlertService) {
+  constructor(private alertService: AlertService) {}
+
+  ngOnInit() {
     this.loadAlerts();
   }
 
   loadAlerts() {
-    this.alerts$ = this.alertService.getAll();
-  }
-
-  markRead(id: number) {
-    this.alertService.markAsRead(id).subscribe(() => {
-      this.loadAlerts();
+    // FIX: Subscribe here to get the data into the array
+    this.alertService.getAll().subscribe(res => {
+      this.alerts = res;
     });
   }
 
-  deleteAlert(id: number) {
-    if (confirm('Are you sure you want to delete this alert?')) {
-      this.alertService.delete(id).subscribe(() => {
-        this.loadAlerts();
-      });
-    }
+  confirmDelete(id: number) {
+    this.idToDelete = id;
+    this.showModal = true;
+  }
+
+  deleteNow() {
+    if (this.idToDelete === null) return;
+    
+    this.alertService.delete(this.idToDelete).subscribe(() => {
+      this.loadAlerts(); // Reload list
+      this.closeModal(); // Close modal
+    });
+  }
+
+  closeModal() {
+    this.showModal = false;
+    this.idToDelete = null;
   }
 }

@@ -2,22 +2,35 @@
 
 <div class="page">
   <div class="form-card">
-    <h2>Add Water Reading</h2>
-    <form (ngSubmit)="addReading()">
+    <h2>Add New Reading</h2>
+
+    <div *ngIf="message" class="notification" [ngClass]="messageType">
+      {{ message }}
+    </div>
+
+    <form (ngSubmit)="save()">
       <div class="form-group">
         <label>Location</label>
         <input
           type="text"
           [(ngModel)]="reading.location"
           name="location"
-          required
           placeholder="e.g. Tank 1"
+          required
         />
       </div>
 
       <div class="form-group">
         <label>pH Level (0-14)</label>
-        <input type="number" [(ngModel)]="reading.ph" name="ph" min="0" max="14" required />
+        <input
+          type="number"
+          [(ngModel)]="reading.ph"
+          name="ph"
+          step="0.1"
+          min="0"
+          max="14"
+          required
+        />
       </div>
 
       <div class="form-group">
@@ -36,14 +49,15 @@
           type="number"
           [(ngModel)]="reading.temperature"
           name="temperature"
-          min="-10"
+          min="-50"
           max="100"
           required
         />
       </div>
 
       <div class="form-actions">
-        <button type="submit">Save Reading</button>
+        <button type="submit" [disabled]="message !== ''">Save Reading</button>
+        <a routerLink="/readings" class="cancel-btn">Cancel</a>
       </div>
     </form>
   </div>

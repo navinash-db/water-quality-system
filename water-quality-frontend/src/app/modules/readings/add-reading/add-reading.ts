@@ -1,41 +1,47 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { WaterService } from '../../../core/services/water.service';
 import { Navbar } from '../../../shared/navbar/navbar';
 
 @Component({
   selector: 'app-add-reading',
   standalone: true,
-  imports: [FormsModule, Navbar],
+  imports: [CommonModule, FormsModule, RouterModule, Navbar],
   templateUrl: './add-reading.html',
   styleUrl: './add-reading.css'
 })
 export class AddReading {
 
-  // Fix: Group individual fields into a 'reading' object to match the HTML
   reading = {
-    ph: 0,
+    location: '',
+    ph: 7.0,
     turbidity: 0,
     tds: 0,
-    temperature: 0,
-    location: ''
+    temperature: 25.0
   };
 
-  constructor(
-    private waterService: WaterService,
-    private router: Router
-  ) {}
+  message = '';
+  messageType = '';
 
-  addReading() {
-    // Send the entire 'reading' object directly
-    this.waterService.addReading(this.reading).subscribe(
-      () => {
-        this.router.navigate(['/readings']);
+  constructor(private waterService: WaterService, private router: Router) {}
+
+  save() {
+    // FIX: Changed .add() to .addReading() to match your Service file
+    this.waterService.addReading(this.reading).subscribe({
+      next: () => {
+        this.message = 'Reading added successfully! Redirecting...';
+        this.messageType = 'success';
+        setTimeout(() => {
+          this.router.navigate(['/readings']);
+        }, 1500);
       },
-      (err) => {
+      error: (err) => {
         console.error(err);
+        this.message = 'Error adding reading. Please check your inputs.';
+        this.messageType = 'error';
       }
-    );
+    });
   }
 }

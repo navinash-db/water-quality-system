@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms'; 
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { WaterService } from '../../../core/services/water.service';
 import { Navbar } from '../../../shared/navbar/navbar';
@@ -8,32 +8,22 @@ import { Navbar } from '../../../shared/navbar/navbar';
 @Component({
   selector: 'app-edit-reading',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule, 
-    RouterModule,
-    Navbar
-  ],
+  imports: [CommonModule, FormsModule, RouterModule, Navbar],
   templateUrl: './edit-reading.html',
   styleUrl: './edit-reading.css'
 })
 export class EditReading implements OnInit {
 
   id!: number;
-  
-  // Define the object to match the HTML
-  reading = {
-    location: '',
-    ph: 0,
-    turbidity: 0,
-    tds: 0,
-    temperature: 0
-  };
+  reading: any = null;
+  message = '';      // Stores the success/error text
+  messageType = '';  // 'success' or 'error'
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private waterService: WaterService
+    private waterService: WaterService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -45,20 +35,28 @@ export class EditReading implements OnInit {
 
   loadReading() {
     this.waterService.getById(this.id).subscribe(res => {
-      this.reading = {
-        location: res.location,
-        ph: res.ph,
-        turbidity: res.turbidity,
-        tds: res.tds,
-        temperature: res.temperature
-      };
+      this.reading = res;
+      this.cdr.detectChanges(); 
     });
   }
 
   updateReading() {
-    this.waterService.update(this.id, this.reading).subscribe(() => {
-      alert('Water reading updated successfully');
-      this.router.navigate(['/readings']);
+    this.waterService.update(this.id, this.reading).subscribe({
+      next: () => {
+        // Show Success Message
+        this.message = 'Water reading updated successfully! Redirecting...';
+        this.messageType = 'success';
+        
+        // Wait 1.5 seconds so user can read it, then go back
+        setTimeout(() => {
+          this.router.navigate(['/readings']);
+        }, 1500);
+      },
+      error: (err) => {
+        this.message = 'Error updating reading. Please try again.';
+        this.messageType = 'error';
+        console.error(err);
+      }
     });
   }
 

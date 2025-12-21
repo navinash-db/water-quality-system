@@ -15,6 +15,11 @@ import { Navbar } from '../../../shared/navbar/navbar';
 export class ListReading {
 
   readings$!: Observable<any[]>;
+  
+  // Modal State
+  showModal = false;
+  idToDelete: number | null = null;
+  message = '';
 
   constructor(private waterService: WaterService) {
     this.loadData();
@@ -24,16 +29,29 @@ export class ListReading {
     this.readings$ = this.waterService.getAll();
   }
 
-  deleteReading(id: number) {
-    const ok = confirm('Are you sure you want to delete this reading?');
+  // 1. Triggered when user clicks "Delete" button in table
+  confirmDelete(id: number) {
+    this.idToDelete = id;
+    this.showModal = true; // Show the custom modal
+  }
 
-    if (!ok) return;
+  // 2. Triggered when user clicks "Yes, Delete" in modal
+  deleteNow() {
+    if (this.idToDelete === null) return;
 
-    this.waterService.delete(id).subscribe(() => {
-      alert('Water reading deleted successfully');
-
-      // 🔴 FORCE PAGE REFRESH (THIS IS THE KEY)
-      window.location.reload();
+    this.waterService.delete(this.idToDelete).subscribe(() => {
+      this.message = 'Reading deleted successfully.';
+      this.closeModal();
+      this.loadData(); // Refresh list without reloading page
+      
+      // Clear message after 3 seconds
+      setTimeout(() => this.message = '', 3000);
     });
+  }
+
+  // 3. Triggered when user clicks "Cancel"
+  closeModal() {
+    this.showModal = false;
+    this.idToDelete = null;
   }
 }

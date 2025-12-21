@@ -1,34 +1,75 @@
 <app-navbar></app-navbar>
 
-<h2>Reports</h2>
+<div class="page">
+  <h2>Reports</h2>
 
-<hr />
+  <div class="dashboard-grid">
+    <div class="card">
+      <h3>Daily Report</h3>
+      <div class="form-group">
+        <label>Select Date:</label>
+        <input type="date" [(ngModel)]="dailyDate" style="width: 100%; margin-bottom: 10px" />
+      </div>
 
-<h3>Daily Report</h3>
-<input type="date" [(ngModel)]="dailyDate" />
-<button (click)="loadDaily()">View</button>
-<button (click)="exportDaily()">Export CSV</button>
+      <div style="margin-bottom: 20px">
+        <button class="primary" (click)="loadDaily()">View Report</button>
+        <button (click)="exportDaily()" style="margin-left: 10px">Export CSV</button>
+      </div>
 
-<div *ngIf="dailyReport">
-  <p>Date: {{ dailyReport.date }}</p>
-  <p>Total: {{ dailyReport.totalReadings }}</p>
-  <p>Good: {{ dailyReport.good }}</p>
-  <p>Moderate: {{ dailyReport.moderate }}</p>
-  <p>Poor: {{ dailyReport.poor }}</p>
-</div>
+      <div *ngIf="dailyReport" class="report-stats">
+        <p><strong>Date:</strong> {{ dailyReport.date }}</p>
+        <p><strong>Total Readings:</strong> {{ dailyReport.totalReadings }}</p>
 
-<hr />
+        <div style="margin-top: 15px; display: flex; gap: 8px; flex-wrap: wrap">
+          <span class="badge good">Good: {{ dailyReport.good }}</span>
+          <span class="badge moderate">Moderate: {{ dailyReport.moderate }}</span>
+          <span class="badge poor">Poor: {{ dailyReport.poor }}</span>
+        </div>
 
-<h3>Monthly Report</h3>
-<input type="month" [(ngModel)]="monthlyMonth" />
-<button (click)="loadMonthly()">View</button>
-<button (click)="exportMonthly()">Export CSV</button>
-<p *ngIf="!dailyReport && !monthlyReport">Select a date or month to view report.</p>
+        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee">
+          <p><strong>Avg pH:</strong> {{ dailyReport.avgPh | number : '1.1-2' }}</p>
+          <p><strong>Avg Turbidity:</strong> {{ dailyReport.avgTurbidity | number : '1.1-2' }}</p>
+          <p><strong>Avg TDS:</strong> {{ dailyReport.avgTds | number : '1.0-0' }}</p>
+        </div>
+      </div>
 
-<div *ngIf="monthlyReport">
-  <p>Month: {{ monthlyReport.month }}</p>
-  <p>Total: {{ monthlyReport.totalReadings }}</p>
-  <p>Good: {{ monthlyReport.good }}</p>
-  <p>Moderate: {{ monthlyReport.moderate }}</p>
-  <p>Poor: {{ monthlyReport.poor }}</p>
+      <p *ngIf="!dailyReport" style="color: #64748b; margin-top: 20px">
+        Click "View Report" to load data.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>Monthly Report</h3>
+      <div class="form-group">
+        <label>Select Month:</label>
+        <input type="month" [(ngModel)]="monthlyMonth" style="width: 100%; margin-bottom: 10px" />
+      </div>
+
+      <div style="margin-bottom: 20px">
+        <button class="primary" (click)="loadMonthly()">View Report</button>
+        <button (click)="exportMonthly()" style="margin-left: 10px">Export CSV</button>
+      </div>
+
+      <div *ngIf="monthlyReport" class="report-stats">
+        <p><strong>Month:</strong> {{ monthlyReport.month }}</p>
+        <p><strong>Total Readings:</strong> {{ monthlyReport.totalReadings }}</p>
+
+        <div style="margin-top: 15px; display: flex; gap: 8px; flex-wrap: wrap">
+          <span class="badge good">Good: {{ monthlyReport.good }}</span>
+          <span class="badge moderate">Moderate: {{ monthlyReport.moderate }}</span>
+          <span class="badge poor">Poor: {{ monthlyReport.poor }}</span>
+        </div>
+
+        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee">
+          <p><strong>Avg pH:</strong> {{ monthlyReport.avgPh | number : '1.1-2' }}</p>
+          <p><strong>Avg Turbidity:</strong> {{ monthlyReport.avgTurbidity | number : '1.1-2' }}</p>
+          <p><strong>Avg TDS:</strong> {{ monthlyReport.avgTds | number : '1.0-0' }}</p>
+        </div>
+      </div>
+
+      <p *ngIf="!monthlyReport" style="color: #64748b; margin-top: 20px">
+        Click "View Report" to load data.
+      </p>
+    </div>
+  </div>
 </div>

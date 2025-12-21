@@ -1,57 +1,62 @@
 <app-navbar></app-navbar>
 
 <div class="page">
-<h2>Alerts</h2>
+  <div class="header-container">
+    <h2>System Alerts</h2>
+  </div>
 
-<div class="table-wrapper">
-  <p *ngIf="(alerts$ | async)?.length === 0" style="margin:20px;">
-  No alerts available.
-</p>
-<table border="1" width="100%">
-  <tr>
-    <th>ID</th>
-    <th>Message</th>
-    <th>Location</th>
-    <th>Quality</th>
-    <th>Status</th>
-    <th>Action</th>
-  </tr>
+  <p *ngIf="alerts.length === 0" style="text-align: center; color: #64748b; margin-top: 40px">
+    System status is normal. No active alerts.
+  </p>
 
-  <tr *ngFor="let a of alerts$ | async"
-    class="alert-row"
-    [ngClass]="a.readStatus ? 'alert-read' : 'alert-unread'">
-
-  <td>{{ a.id }}</td>
-
-  <td class="alert-message">
-    {{ a.message }}
-  </td>
-
-  <td>{{ a.location }}</td>
-
-  <td>
-    <span class="badge poor">{{ a.quality }}</span>
-  </td>
-
-  <td>
-    {{ a.readStatus ? 'Read' : 'Unread' }}
-  </td>
-
-  <td class="alert-actions">
-    <button
-      *ngIf="!a.readStatus"
-      class="read"
-      (click)="markRead(a.id)">
-      Mark Read
-    </button>
-
-    <button
-      class="delete"
-      (click)="deleteAlert(a.id)">
-      Delete
-    </button>
-  </td>
-</tr>
-</table>
+  <div class="table-wrapper" *ngIf="alerts.length > 0">
+    <table cellpadding="0" cellspacing="0">
+      <thead>
+        <tr>
+          <th style="width: 80px">ID</th>
+          <th style="width: 150px">Severity</th>
+          <th>Message</th>
+          <th style="width: 120px; text-align: center">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let a of alerts">
+          <td>#{{ a.id }}</td>
+          <td>
+            <span
+              class="badge"
+              [ngClass]="{
+                critical: a.severity.toLowerCase() === 'critical',
+                warning: a.severity.toLowerCase() === 'warning',
+                info: a.severity.toLowerCase() === 'info' || a.severity.toLowerCase() === 'normal'
+              }"
+            >
+              {{ a.severity }}
+            </span>
+          </td>
+          <td>
+            <span style="font-weight: 500; color: #1e293b">
+              {{ a.message }}
+            </span>
+          </td>
+          <td style="text-align: center">
+            <button class="btn-delete" (click)="confirmDelete(a.id)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
+
+<div class="modal-overlay" *ngIf="showModal">
+  <div class="modal-box">
+    <h3 style="margin-top: 0; color: #1e293b">Resolve Alert?</h3>
+    <p style="color: #64748b; margin-top: 10px">
+      Are you sure you want to remove this alert from the system log?
+    </p>
+    <div class="modal-actions">
+      <button class="cancel-btn" (click)="closeModal()">Cancel</button>
+      <button class="confirm-btn" (click)="deleteNow()">Yes, Delete</button>
+    </div>
+  </div>
 </div>

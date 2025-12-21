@@ -3,7 +3,16 @@
 <div class="page">
   <div class="form-card">
     <h2>Edit Water Reading</h2>
-    <form (ngSubmit)="updateReading()">
+
+    <div *ngIf="message" class="notification" [ngClass]="messageType">
+      {{ message }}
+    </div>
+
+    <div *ngIf="!reading" style="text-align: center; padding: 40px; color: #666">
+      <p>Loading reading data...</p>
+    </div>
+
+    <form *ngIf="reading" (ngSubmit)="updateReading()">
       <div class="form-group">
         <label>Location</label>
         <input type="text" [(ngModel)]="reading.location" name="location" required />
@@ -30,15 +39,15 @@
           type="number"
           [(ngModel)]="reading.temperature"
           name="temperature"
-          min="-10"
+          min="-50"
           max="100"
           required
         />
       </div>
 
       <div class="form-actions">
-        <button type="submit">Update Reading</button>
-        <button type="button" class="delete" (click)="cancel()">Cancel</button>
+        <button type="submit" [disabled]="message !== ''">Update Reading</button>
+        <button type="button" class="cancel-btn" (click)="cancel()">Cancel</button>
       </div>
     </form>
   </div>
