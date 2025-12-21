@@ -1,164 +1,136 @@
-/* Modern Reset & Variables */
+/* 1. GOOGLE FONTS IMPORT */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 :root {
-  --primary-color: #0ea5e9; /* Sky Blue */
-  --primary-hover: #0284c7;
-  --secondary-color: #64748b; /* Slate */
-  --success-color: #10b981;
-  --warning-color: #f59e0b;
-  --danger-color: #ef4444;
-  --bg-color: #f8fafc;
-  --card-bg: #ffffff;
-  --text-main: #1e293b;
+  /* Professional SaaS Palette */
+  --primary: #2563eb;       /* Royal Blue */
+  --primary-dark: #1e40af;
+  --secondary: #64748b;     /* Slate Grey */
+  --background: #f8fafc;    /* Light Blue-Grey Background */
+  --surface: #ffffff;       /* Pure White Cards */
+  --text-main: #0f172a;     /* Very Dark Blue */
   --text-muted: #64748b;
-  --border-radius: 12px;
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
-  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+  --border: #e2e8f0;
+  
+  /* Status Colors */
+  --danger: #ef4444;
+  --success: #22c55e;
+  --warning: #f59e0b;
+  
+  /* Spacing & Effects */
+  --radius: 8px;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
 }
 
+/* 2. GLOBAL RESET */
 body {
-  margin: 0;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background-color: var(--bg-color);
+  font-family: 'Inter', sans-serif;
+  background-color: var(--background);
   color: var(--text-main);
+  margin: 0;
+  padding: 0;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Page Layout */
+/* 3. STANDARD LAYOUTS */
 .page {
   max-width: 1200px;
-  margin: 40px auto;
-  padding: 0 24px;
+  margin: 0 auto;
+  padding: 2rem;
+  animation: fadeIn 0.4s ease-in-out;
 }
 
-h2 {
-  font-size: 1.8rem;
-  color: var(--text-main);
-  margin-bottom: 24px;
-  font-weight: 700;
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* Modern Card Style */
-.card, .form-card, .dashboard-card {
-  background: var(--card-bg);
-  border-radius: var(--border-radius);
+h2 { font-weight: 700; color: var(--text-main); margin-bottom: 1.5rem; letter-spacing: -0.5px; }
+h3 { font-weight: 600; color: var(--text-main); margin-bottom: 1rem; }
+
+/* 4. MODERN CARDS */
+.card, .dashboard-card, .form-card, .report-card {
+  background: var(--surface);
+  border-radius: var(--radius);
   box-shadow: var(--shadow-sm);
-  padding: 24px;
-  border: 1px solid #e2e8f0;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid var(--border);
+  padding: 1.5rem;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-/* Modern Buttons */
-button {
+.card:hover, .dashboard-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* 5. GLOBAL INPUTS */
+input, select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+  box-sizing: border-box; 
+  background-color: #f8fafc;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--primary);
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-group { margin-bottom: 1.25rem; }
+.form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-muted); }
+
+/* 6. GLOBAL BUTTONS */
+button, .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  font-weight: 500;
+  border-radius: var(--radius);
   cursor: pointer;
   transition: all 0.2s;
   border: none;
-  font-size: 0.95rem;
-}
-
-button.primary, button[type="submit"] {
-  background-color: var(--primary-color);
-  color: white;
-}
-
-button:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
-  opacity: 0.95;
-}
-
-button.delete {
-  background-color: #fee2e2;
-  color: var(--danger-color);
-}
-
-button.delete:hover {
-  background-color: var(--danger-color);
-  color: white;
-}
-
-/* Modern Forms */
-.form-group label {
-  display: block;
-  margin-bottom: 8px;
-  color: var(--text-muted);
-  font-weight: 500;
   font-size: 0.9rem;
+  text-decoration: none;
 }
 
-.form-group input, .form-group select {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  font-size: 1rem;
-  transition: border-color 0.2s;
-  box-sizing: border-box; /* Fixes width issues */
-}
+button.primary, .btn-primary { background-color: var(--primary); color: white; }
+button.primary:hover { background-color: var(--primary-dark); }
 
-.form-group input:focus {
-  outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
-}
+button.danger, .btn-delete { background-color: #fef2f2; color: #dc2626; border: 1px solid #fee2e2; }
+button.danger:hover, .btn-delete:hover { background-color: #dc2626; color: white; }
 
+/* 7. GLOBAL TABLES */
 .table-wrapper {
   background: white;
-  border-radius: var(--border-radius);
+  border-radius: var(--radius);
   box-shadow: var(--shadow-sm);
-  overflow: hidden; /* Rounds the corners of the table */
+  overflow: hidden;
+  border: 1px solid var(--border);
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 0; /* Remove default margin */
-}
+table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+th { background: #f8fafc; padding: 1rem; text-align: left; font-weight: 600; color: var(--text-muted); border-bottom: 1px solid var(--border); }
+td { padding: 1rem; border-bottom: 1px solid #f1f5f9; color: var(--text-main); }
+tr:hover { background-color: #f8fafc; }
 
-thead {
-  background-color: #f8fafc;
-}
-
-th {
-  text-align: left;
-  padding: 16px;
-  font-weight: 600;
-  color: var(--text-muted);
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-td {
-  padding: 16px;
-  border-bottom: 1px solid #f1f5f9;
-  color: var(--text-main);
-}
-
-tr:last-child td {
-  border-bottom: none;
-}
-
-tr:hover {
-  background-color: #f8fafc;
-}
-
-/* Status Badges */
+/* 8. BADGES */
 .badge {
-  display: inline-block;
-  padding: 4px 12px;
-  border-radius: 9999px;
+  padding: 4px 10px;
+  border-radius: 20px;
   font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
-
-.badge.good { background: #dcfce7; color: #15803d; }
-.badge.moderate { background: #fef3c7; color: #b45309; }
-.badge.poor { background: #fee2e2; color: #b91c1c; }
+.badge.good, .badge.info { background: #dcfce7; color: #166534; }
+.badge.moderate, .badge.warning { background: #fef3c7; color: #92400e; }
+.badge.poor, .badge.critical { background: #fee2e2; color: #991b1b; }

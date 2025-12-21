@@ -1,48 +1,77 @@
+/* --- 1. NEW BRAND STYLE --- */
+.brand-logo {
+  font-size: 1.5rem;       /* Larger text */
+  font-weight: 800;        /* Extra bold */
+  color: #2563eb;          /* Primary Blue */
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-right: 20px;      /* Spacing from other links */
+  letter-spacing: -0.5px;  /* Modern tight spacing */
+}
+
+/* Ensure the brand doesn't change color on hover like normal links */
+.brand-logo:hover {
+  background-color: transparent !important; 
+  color: #1e40af; /* Darker blue on hover */
+}
+/* -------------------------- */
+
 .navbar {
+  background-color: #ffffff;
+  padding: 0 2rem;
+  height: 64px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #ffffff;
-  padding: 16px 32px;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
   border-bottom: 1px solid #e2e8f0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
 .nav-left {
   display: flex;
+  align-items: center; /* Align items vertically */
   gap: 8px;
 }
 
-.nav-left a {
-  color: #64748b; /* secondary color */
+/* Standard Nav Links (Dashboard, Readings, etc.) */
+.nav-link {
   text-decoration: none;
+  color: #64748b;
   font-weight: 500;
+  font-size: 0.95rem;
   padding: 8px 16px;
-  border-radius: 8px;
-  transition: all 0.2s;
+  border-radius: 6px;
+  transition: all 0.2s ease;
 }
 
-.nav-left a:hover {
-  background-color: #f1f5f9;
-  color: #0ea5e9; /* primary color */
+.nav-link:hover {
+  color: #2563eb;
+  background-color: #eff6ff;
 }
 
-.nav-left a.active {
-  background-color: #e0f2fe;
-  color: #0ea5e9;
+.nav-link.active {
+  color: #2563eb;
+  background-color: #eff6ff;
+  font-weight: 600;
 }
 
 .nav-right a {
-  color: #ef4444; /* danger color */
-  font-weight: 600;
+  font-size: 0.9rem;
+  color: #ef4444;
   text-decoration: none;
+  font-weight: 500;
   padding: 8px 16px;
-  border: 1px solid #fecaca;
-  border-radius: 8px;
+  border-radius: 6px;
+  border: 1px solid transparent;
   transition: all 0.2s;
 }
 
 .nav-right a:hover {
-  background: #ef4444;
-  color: white;
+  background-color: #fef2f2;
+  border-color: #fee2e2;
 }

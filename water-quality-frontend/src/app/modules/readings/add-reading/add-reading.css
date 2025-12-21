@@ -1,96 +1,68 @@
-/* Container */
-.form-card {
-  background: white;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  max-width: 500px;
-  margin: 0 auto;
-}
-
-h2 { margin-top: 0; color: #1e293b; margin-bottom: 20px; }
-
-/* Inputs */
-.form-group { margin-bottom: 15px; }
-label { display: block; margin-bottom: 5px; color: #475569; font-weight: 500; }
-input {
-  width: 100%; padding: 10px;
-  border: 1px solid #cbd5e1; border-radius: 6px; font-size: 1rem;
-}
-input:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
-
-/* BUTTONS */
-.form-actions {
-  margin-top: 25px;
-  display: flex;
-  gap: 10px; /* Space between buttons */
-}
-
-/* Primary Button (Blue) */
-button[type="submit"] {
-  background-color: #3b82f6;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 500;
-  flex: 1; 
-}
-button[type="submit"]:hover { background-color: #2563eb; }
-button[type="submit"]:disabled { background-color: #94a3b8; cursor: not-allowed; }
-
-/* Secondary Button (Gray - Cancel) */
-.cancel-btn {
-  background-color: #e2e8f0;
-  color: #334155;
-  border: 1px solid #cbd5e1;
-  padding: 10px 20px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 500;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block; /* Essential for <a> tags to look like buttons */
-}
-.cancel-btn:hover { background-color: #cbd5e1; }
-
-/* Notifications */
-.notification { padding: 12px; margin-bottom: 20px; border-radius: 6px; text-align: center; font-weight: bold; }
-.notification.success { background-color: #d1fae5; color: #065f46; border: 1px solid #34d399; }
-.notification.error { background-color: #fee2e2; color: #991b1b; border: 1px solid #f87171; }
-
-/* ANIMATION: Slide Up Fade In */
+/* --- ANIMATIONS --- */
 @keyframes slideUp {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* MAIN CARD */
+/* --- PAGE LAYOUT --- */
+.centered-page {
+  display: flex;
+  justify-content: center;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  min-height: 80vh; /* Ensures it looks centered on large screens */
+}
+
+/* --- FORM CARD --- */
 .form-card {
+  width: 100%;
+  max-width: 600px; /* Wider to fit 2 columns nicely */
   background: white;
   padding: 40px;
   border-radius: 12px;
-  /* Soft Shadow */
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); 
-  max-width: 500px;
-  margin: 20px auto; 
-  /* Creative Touch: Blue Accent Bar on top */
-  border-top: 5px solid #3b82f6; 
-  animation: slideUp 0.5s ease-out;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+  
+  /* Animation */
+  animation: slideUp 0.4s ease-out;
+  
+  /* Optional: Blue Accent Line at top */
+  border-top: 4px solid #2563eb;
 }
 
-h2 {
-  margin-top: 0;
-  color: #1e293b;
-  margin-bottom: 25px;
+/* --- HEADER --- */
+.form-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.form-header h2 {
   font-size: 1.5rem;
-  text-align: center; /* Centered Title */
+  color: #0f172a; /* Dark Slate */
+  margin: 0 0 8px 0;
+  font-weight: 700;
 }
 
-/* INPUT GROUPS */
+.form-header h2 i {
+  color: #2563eb; /* Primary Blue */
+  margin-right: 8px;
+}
+
+.form-header p {
+  color: #64748b;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* --- GRID SYSTEM (New) --- */
+/* This handles the side-by-side inputs */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* --- INPUTS --- */
 .form-group {
   margin-bottom: 20px;
 }
@@ -98,98 +70,110 @@ h2 {
 label {
   display: block;
   margin-bottom: 8px;
-  color: #64748b;
-  font-weight: 600;
+  color: #475569;
+  font-weight: 500;
   font-size: 0.9rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
 input {
   width: 100%;
-  padding: 12px 15px;
-  border: 2px solid #e2e8f0; /* Thicker border */
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
   border-radius: 8px;
-  font-size: 1rem;
-  transition: all 0.3s ease;
+  font-size: 0.95rem;
   background-color: #f8fafc;
+  transition: all 0.2s;
+  box-sizing: border-box; /* Fixes width overflow */
 }
 
-/* CREATIVE FOCUS STATE */
 input:focus {
   outline: none;
   background-color: white;
-  border-color: #3b82f6;
-  /* Blue Glow Effect */
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); 
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
-/* BUTTONS CONTAINER */
-.form-actions {
-  margin-top: 30px;
-  display: flex;
-  gap: 15px;
-}
-
-/* SAVE BUTTON (Gradient Blue) */
-button[type="submit"] {
-  flex: 1; /* Takes up half space */
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
-  color: white;
-  border: none;
-  padding: 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 600;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-button[type="submit"]:hover {
-  transform: translateY(-2px); /* Slight lift */
-  box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
-}
-
-button[type="submit"]:disabled {
-  background: #cbd5e1;
-  transform: none;
-  box-shadow: none;
-  cursor: not-allowed;
-}
-
-/* CANCEL BUTTON (Red Outline Style) */
-.cancel-btn {
-  flex: 1; /* Takes up half space */
-  background: white;
-  color: #ef4444;
-  border: 2px solid #ef4444;
-  padding: 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 600;
-  text-align: center;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  display: flex;       /* Ensures text centers properly */
-  justify-content: center;
-  align-items: center;
-}
-
-.cancel-btn:hover {
-  background-color: #ef4444; /* Fills with Red */
-  color: white;              /* Text turns White */
-  box-shadow: 0 5px 15px rgba(239, 68, 68, 0.3);
-}
-
-/* NOTIFICATIONS */
+/* --- NOTIFICATIONS --- */
 .notification {
-  padding: 15px;
-  margin-bottom: 25px;
+  padding: 12px 16px;
   border-radius: 8px;
-  text-align: center;
-  font-weight: bold;
+  margin-bottom: 25px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   animation: slideUp 0.3s ease-out;
 }
-.notification.success { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
-.notification.error { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+
+.notification i { font-size: 1.1rem; }
+
+/* Success */
+.notification.success {
+  background: #f0fdf4;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+/* Error */
+.notification.error {
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+/* --- ACTION BUTTONS --- */
+.form-actions {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px dashed #e2e8f0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* Base Button Styles (if not using global classes) */
+.btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Primary (Save) */
+.btn-primary {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
+  border: none;
+  box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px -2px rgba(37, 99, 235, 0.3);
+}
+
+.btn-primary:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Secondary (Cancel) */
+.btn-secondary {
+  background: white;
+  color: #64748b;
+  border: 1px solid #cbd5e1;
+}
+
+.btn-secondary:hover {
+  background: #f1f5f9;
+  color: #334155;
+  border-color: #94a3b8;
+}

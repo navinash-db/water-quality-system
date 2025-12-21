@@ -1,63 +1,89 @@
 <app-navbar></app-navbar>
 
-<div class="page">
+<div class="page centered-page">
   <div class="form-card">
-    <h2>Add New Reading</h2>
+    <div class="form-header">
+      <h2><i class="fas fa-plus-circle"></i> New Reading</h2>
+      <p>Enter the water quality parameters recorded at the site.</p>
+    </div>
 
     <div *ngIf="message" class="notification" [ngClass]="messageType">
-      {{ message }}
+      <i class="fas fa-info-circle"></i> {{ message }}
     </div>
 
     <form (ngSubmit)="save()">
       <div class="form-group">
-        <label>Location</label>
+        <label>Location Name</label>
         <input
           type="text"
           [(ngModel)]="reading.location"
           name="location"
-          placeholder="e.g. Tank 1"
+          placeholder="e.g. City Reservoir Sector 4"
           required
         />
       </div>
 
-      <div class="form-group">
-        <label>pH Level (0-14)</label>
-        <input
-          type="number"
-          [(ngModel)]="reading.ph"
-          name="ph"
-          step="0.1"
-          min="0"
-          max="14"
-          required
-        />
+      <div class="form-row">
+        <div class="form-group">
+          <label>pH Level (0-14)</label>
+          <input
+            type="number"
+            [(ngModel)]="reading.ph"
+            name="ph"
+            step="0.1"
+            min="0"
+            max="14"
+            placeholder="7.0"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Temperature (°C)</label>
+          <input
+            type="number"
+            [(ngModel)]="reading.temperature"
+            name="temperature"
+            min="-50"
+            max="100"
+            placeholder="24.5"
+            required
+          />
+        </div>
       </div>
 
-      <div class="form-group">
-        <label>Turbidity (NTU)</label>
-        <input type="number" [(ngModel)]="reading.turbidity" name="turbidity" min="0" required />
-      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Turbidity (NTU)</label>
+          <input
+            type="number"
+            [(ngModel)]="reading.turbidity"
+            name="turbidity"
+            min="0"
+            placeholder="1.5"
+            required
+          />
+        </div>
 
-      <div class="form-group">
-        <label>TDS (ppm)</label>
-        <input type="number" [(ngModel)]="reading.tds" name="tds" min="0" required />
-      </div>
-
-      <div class="form-group">
-        <label>Temperature (°C)</label>
-        <input
-          type="number"
-          [(ngModel)]="reading.temperature"
-          name="temperature"
-          min="-50"
-          max="100"
-          required
-        />
+        <div class="form-group">
+          <label>TDS (ppm)</label>
+          <input
+            type="number"
+            [(ngModel)]="reading.tds"
+            name="tds"
+            min="0"
+            placeholder="300"
+            required
+          />
+        </div>
       </div>
 
       <div class="form-actions">
-        <button type="submit" [disabled]="message !== ''">Save Reading</button>
-        <a routerLink="/readings" class="cancel-btn">Cancel</a>
+        <a routerLink="/readings" class="btn btn-secondary">Cancel</a>
+
+        <button type="submit" class="btn btn-primary" [disabled]="message !== ''">
+          <i class="fas fa-save" style="margin-right: 8px"></i> Save Reading
+        </button>
       </div>
     </form>
   </div>

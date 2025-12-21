@@ -13,4 +13,10 @@ export class AuthService {
   login(data: any) {
     return this.http.post(this.baseUrl + '/auth/login', data);
   }
+
+  // --- ADD THIS METHOD ---
+  logout() {
+    localStorage.removeItem('user'); 
+    // If you implemented tokens, you would remove them here too
+  }
 }
