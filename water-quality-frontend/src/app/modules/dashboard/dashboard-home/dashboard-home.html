@@ -1,21 +1,59 @@
 <app-navbar></app-navbar>
 
 <div class="page">
-  <h2>Dashboard</h2>
+  <div class="header-container">
+    <h2>Dashboard Overview</h2>
+    <span class="date-badge">{{ latestReading?.timestamp | date : 'medium' }}</span>
+  </div>
+
+  <div
+    class="status-card"
+    *ngIf="latestReading"
+    [ngClass]="{
+      'bg-green': latestReading.quality === 'Good',
+      'bg-yellow': latestReading.quality === 'Moderate',
+      'bg-red': latestReading.quality === 'Poor'
+    }"
+  >
+    <div class="status-left">
+      <h3>Current Status</h3>
+      <h1 class="big-status">{{ latestReading.quality }}</h1>
+      <p class="location-text">
+        <i class="fas fa-map-marker-alt"></i> {{ latestReading.location }}
+      </p>
+    </div>
+
+    <div class="status-grid">
+      <div class="stat-item">
+        <span class="label">pH Level</span>
+        <span class="value">{{ latestReading.ph }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="label">Turbidity</span>
+        <span class="value">{{ latestReading.turbidity }} NTU</span>
+      </div>
+      <div class="stat-item">
+        <span class="label">TDS</span>
+        <span class="value">{{ latestReading.tds }} ppm</span>
+      </div>
+    </div>
+  </div>
 
   <div class="dashboard-grid">
-
-    <!-- Summary Chart -->
     <div class="dashboard-card">
-      <h3>Water Quality Summary</h3>
-      <canvas id="qualityChart"></canvas>
+      <h3>Overall Quality Ratio</h3>
+
+      <div class="chart-container">
+        <canvas id="qualityChart"></canvas>
+      </div>
     </div>
 
-    <!-- Trend Chart -->
     <div class="dashboard-card">
-      <h3>Water Quality Trends</h3>
-      <canvas id="trendChart"></canvas>
-    </div>
+      <h3>Critical Alerts Trend</h3>
 
+      <div class="chart-container">
+        <canvas id="trendChart"></canvas>
+      </div>
+    </div>
   </div>
 </div>

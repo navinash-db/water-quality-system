@@ -10,6 +10,10 @@ public class Alert {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // --- NEW FIELD ---
+    private Long readingId; // Links this alert to a specific water reading
+    // -----------------
+
     private String message;
     private String location;
     private String quality;
@@ -18,11 +22,22 @@ public class Alert {
 
     private LocalDateTime timestamp = LocalDateTime.now();
 
-    public Alert() {}
+    public Alert() {
+    }
 
     public Long getId() {
         return id;
     }
+
+    // --- NEW GETTER & SETTER ---
+    public Long getReadingId() {
+        return readingId;
+    }
+
+    public void setReadingId(Long readingId) {
+        this.readingId = readingId;
+    }
+    // ---------------------------
 
     public String getMessage() {
         return message;

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core'; // <-- Import
 import { RouterModule } from '@angular/router';
 import { Observable } from 'rxjs';
 import { WaterService } from '../../../core/services/water.service';
@@ -16,12 +16,14 @@ export class ListReading {
 
   readings$!: Observable<any[]>;
   
-  // Modal State
   showModal = false;
   idToDelete: number | null = null;
   message = '';
 
-  constructor(private waterService: WaterService) {
+  constructor(
+    private waterService: WaterService,
+    private cdr: ChangeDetectorRef // <-- Inject
+  ) {
     this.loadData();
   }
 
@@ -29,27 +31,28 @@ export class ListReading {
     this.readings$ = this.waterService.getAll();
   }
 
-  // 1. Triggered when user clicks "Delete" button in table
   confirmDelete(id: number) {
     this.idToDelete = id;
-    this.showModal = true; // Show the custom modal
+    this.showModal = true;
   }
 
-  // 2. Triggered when user clicks "Yes, Delete" in modal
   deleteNow() {
     if (this.idToDelete === null) return;
 
     this.waterService.delete(this.idToDelete).subscribe(() => {
       this.message = 'Reading deleted successfully.';
       this.closeModal();
-      this.loadData(); // Refresh list without reloading page
+      this.loadData(); 
       
-      // Clear message after 3 seconds
-      setTimeout(() => this.message = '', 3000);
+      this.cdr.detectChanges(); // <-- FORCE UPDATE (Closes modal visually)
+      
+      setTimeout(() => {
+        this.message = '';
+        this.cdr.detectChanges(); // <-- Update again when message fades
+      }, 3000);
     });
   }
 
-  // 3. Triggered when user clicks "Cancel"
   closeModal() {
     this.showModal = false;
     this.idToDelete = null;

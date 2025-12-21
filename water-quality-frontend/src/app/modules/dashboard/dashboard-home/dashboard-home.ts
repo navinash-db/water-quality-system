@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { Chart } from 'chart.js/auto';
 import { DashboardService } from '../../../core/services/dashboard.service';
 import { Navbar } from '../../../shared/navbar/navbar';
@@ -11,66 +11,94 @@ import { Navbar } from '../../../shared/navbar/navbar';
   templateUrl: './dashboard-home.html',
   styleUrl: './dashboard-home.css'
 })
-export class DashboardHome implements AfterViewInit {
+export class DashboardHome implements AfterViewInit, OnDestroy {
+
+  latestReading: any = null;
+  
+  qualityChart: any;
+  trendChart: any;
 
   constructor(private dashboardService: DashboardService) {}
 
   ngAfterViewInit(): void {
-    // Quality summary bar chart
     this.dashboardService.getSummary().subscribe(summary => {
       this.createSummaryChart(summary);
     });
 
-    // Trend line chart
     this.dashboardService.getTrends().subscribe(trends => {
       this.createTrendChart(trends);
     });
+
+    this.dashboardService.getLatest().subscribe(reading => {
+      this.latestReading = reading;
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.qualityChart) this.qualityChart.destroy();
+    if (this.trendChart) this.trendChart.destroy();
   }
 
   createSummaryChart(summary: any) {
-    new Chart('qualityChart', {
-      type: 'bar',
+    // FIX: Destroy existing chart if it exists
+    if (this.qualityChart) {
+      this.qualityChart.destroy();
+    }
+
+    this.qualityChart = new Chart('qualityChart', {
+      type: 'doughnut',
       data: {
         labels: ['Good', 'Moderate', 'Poor'],
         datasets: [{
-          label: 'Water Quality Count',
           data: [summary.good, summary.moderate, summary.poor],
-          backgroundColor: ['green', 'orange', 'red']
+          backgroundColor: ['#22c55e', '#f59e0b', '#ef4444'],
+          borderWidth: 0,
+          hoverOffset: 4
         }]
+      },
+      options: {
+        maintainAspectRatio: false, // This is safe ONLY if CSS height is set!
+        responsive: true,
+        plugins: {
+          legend: { position: 'bottom' }
+        }
       }
     });
   }
 
   createTrendChart(trends: any[]) {
+    // FIX: Destroy existing chart if it exists
+    if (this.trendChart) {
+      this.trendChart.destroy();
+    }
+
     const dates = trends.map(t => t.date);
-    const good = trends.map(t => t.good);
-    const moderate = trends.map(t => t.moderate);
     const poor = trends.map(t => t.poor);
 
-    new Chart('trendChart', {
+    this.trendChart = new Chart('trendChart', {
       type: 'line',
       data: {
         labels: dates,
         datasets: [
           {
-            label: 'Good',
-            data: good,
-            borderColor: 'green',
-            fill: false
-          },
-          {
-            label: 'Moderate',
-            data: moderate,
-            borderColor: 'orange',
-            fill: false
-          },
-          {
-            label: 'Poor',
+            label: 'Critical Incidents',
             data: poor,
-            borderColor: 'red',
-            fill: false
+            borderColor: '#ef4444',
+            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+            fill: true,
+            tension: 0.4
           }
         ]
+      },
+      options: {
+        maintainAspectRatio: false, // This is safe ONLY if CSS height is set!
+        responsive: true,
+        scales: {
+          y: { 
+            beginAtZero: true, 
+            ticks: { stepSize: 1 } 
+          }
+        }
       }
     });
   }

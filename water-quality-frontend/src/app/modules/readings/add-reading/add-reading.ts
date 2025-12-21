@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core'; // <-- Import ChangeDetectorRef
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -25,22 +25,28 @@ export class AddReading {
   message = '';
   messageType = '';
 
-  constructor(private waterService: WaterService, private router: Router) {}
+  constructor(
+    private waterService: WaterService, 
+    private router: Router,
+    private cdr: ChangeDetectorRef // <-- Inject it here
+  ) {}
 
   save() {
-    // FIX: Changed .add() to .addReading() to match your Service file
     this.waterService.addReading(this.reading).subscribe({
       next: () => {
-        this.message = 'Reading added successfully! Redirecting...';
+        this.message = 'Reading added successfully!';
         this.messageType = 'success';
-        setTimeout(() => {
-          this.router.navigate(['/readings']);
-        }, 1500);
+        
+        this.cdr.detectChanges(); // <-- FORCE UI UPDATE
+        
+        // Removed timeout for instant redirect
+        this.router.navigate(['/readings']);
       },
       error: (err) => {
         console.error(err);
         this.message = 'Error adding reading. Please check your inputs.';
         this.messageType = 'error';
+        this.cdr.detectChanges(); // <-- FORCE UI UPDATE ON ERROR TOO
       }
     });
   }

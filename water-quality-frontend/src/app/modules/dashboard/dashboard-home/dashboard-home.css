@@ -9,3 +9,10 @@
      but ensure it doesn't override the global defaults */
   min-height: 300px;
 }
+
+.chart-container {
+  position: relative;
+  height: 300px;
+  width: 100%;
+  overflow: hidden;
+}

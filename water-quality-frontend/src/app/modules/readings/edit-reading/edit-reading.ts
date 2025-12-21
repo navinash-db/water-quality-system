@@ -16,14 +16,14 @@ export class EditReading implements OnInit {
 
   id!: number;
   reading: any = null;
-  message = '';      // Stores the success/error text
-  messageType = '';  // 'success' or 'error'
+  message = '';     
+  messageType = ''; 
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private waterService: WaterService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef // Already injected
   ) {}
 
   ngOnInit(): void {
@@ -43,19 +43,18 @@ export class EditReading implements OnInit {
   updateReading() {
     this.waterService.update(this.id, this.reading).subscribe({
       next: () => {
-        // Show Success Message
-        this.message = 'Water reading updated successfully! Redirecting...';
+        this.message = 'Water reading updated successfully!';
         this.messageType = 'success';
         
-        // Wait 1.5 seconds so user can read it, then go back
-        setTimeout(() => {
-          this.router.navigate(['/readings']);
-        }, 1500);
+        this.cdr.detectChanges(); // <-- ADD THIS LINE
+        
+        this.router.navigate(['/readings']); // Instant redirect
       },
       error: (err) => {
         this.message = 'Error updating reading. Please try again.';
         this.messageType = 'error';
         console.error(err);
+        this.cdr.detectChanges(); // <-- AND HERE
       }
     });
   }
