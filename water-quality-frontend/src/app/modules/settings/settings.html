@@ -1,0 +1,59 @@
+<app-navbar></app-navbar>
+
+<div class="page centered-page">
+  <div class="form-card">
+    <div class="form-header">
+      <h2><i class="fas fa-cog"></i> System Configuration</h2>
+      <p>Define the safety limits for water quality alerts.</p>
+    </div>
+
+    <div *ngIf="message" class="notification" [ngClass]="messageType">
+      {{ message }}
+    </div>
+
+    <div *ngIf="!config" class="loading-state">
+      <i class="fas fa-spinner fa-spin"></i> Loading configuration...
+    </div>
+
+    <form *ngIf="config" (ngSubmit)="saveSettings()">
+      <h3 class="section-title">pH Levels (Acid/Alkaline)</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Minimum Safe pH</label>
+          <input type="number" step="0.1" [(ngModel)]="config.phMin" name="phMin" required />
+        </div>
+        <div class="form-group">
+          <label>Maximum Safe pH</label>
+          <input type="number" step="0.1" [(ngModel)]="config.phMax" name="phMax" required />
+        </div>
+      </div>
+
+      <h3 class="section-title">Contamination Limits</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Max Turbidity (NTU)</label>
+          <input
+            type="number"
+            step="0.1"
+            [(ngModel)]="config.turbidityMax"
+            name="turbidityMax"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label>Max TDS (ppm)</label>
+          <input type="number" [(ngModel)]="config.tdsMax" name="tdsMax" required />
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="resetToDefaults()">
+          Reset Defaults
+        </button>
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-save" style="margin-right: 8px"></i> Save Changes
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

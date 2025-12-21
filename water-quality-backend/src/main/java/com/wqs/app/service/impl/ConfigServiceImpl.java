@@ -18,15 +18,16 @@ public class ConfigServiceImpl implements ConfigService {
 
     @Override
     public ThresholdConfig getThresholds() {
-        // assume single row config
-        return repo.findAll().stream().findFirst().orElse(null);
+        // FIX: If no config exists, create default values immediately
+        return repo.findAll().stream().findFirst()
+                .orElseGet(this::createDefaultConfig);
     }
-    
+
     @Override
     public ThresholdConfig updateThresholds(ThresholdRequest request) {
-
-        ThresholdConfig config =
-            repo.findAll().stream().findFirst().orElse(new ThresholdConfig());
+        // Get existing or create new
+        ThresholdConfig config = repo.findAll().stream().findFirst()
+                .orElse(new ThresholdConfig());
 
         config.setPhMin(request.getPhMin());
         config.setPhMax(request.getPhMax());
@@ -35,14 +36,19 @@ public class ConfigServiceImpl implements ConfigService {
 
         return repo.save(config);
     }
-    
+
     @Override
     public ThresholdConfig resetThresholds() {
+        return createDefaultConfig();
+    }
 
-        ThresholdConfig config =
-            repo.findAll().stream().findFirst().orElse(new ThresholdConfig());
+    // --- HELPER METHOD ---
+    private ThresholdConfig createDefaultConfig() {
+        // Check if one exists to overwrite, or create new
+        ThresholdConfig config = repo.findAll().stream().findFirst()
+                .orElse(new ThresholdConfig());
 
-        // Default values
+        // Set Standard Defaults
         config.setPhMin(6.5);
         config.setPhMax(8.5);
         config.setTurbidityMax(5.0);
@@ -50,5 +56,4 @@ public class ConfigServiceImpl implements ConfigService {
 
         return repo.save(config);
     }
-
 }

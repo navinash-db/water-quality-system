@@ -1,0 +1,43 @@
+/* Re-use the card styles we defined for other forms */
+.centered-page {
+  display: flex; justify-content: center; padding-top: 40px;
+}
+
+.form-card {
+  width: 100%; max-width: 600px;
+  background: white; padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+  border: 1px solid #e2e8f0;
+  border-top: 4px solid #64748b; /* Grey Accent for Settings */
+  animation: slideUp 0.4s ease-out;
+}
+
+.form-header { text-align: center; margin-bottom: 30px; }
+.form-header h2 { font-size: 1.5rem; color: #0f172a; margin: 0 0 5px 0; }
+.form-header h2 i { color: #64748b; margin-right: 8px; }
+.form-header p { color: #64748b; margin: 0; }
+
+.section-title {
+  font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;
+  color: #94a3b8; margin: 25px 0 15px 0; border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 5px;
+}
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.form-group { margin-bottom: 15px; }
+label { display: block; margin-bottom: 8px; color: #475569; font-weight: 500; font-size: 0.9rem; }
+input {
+  width: 100%; padding: 10px; border: 1px solid #cbd5e1;
+  border-radius: 8px; background: #f8fafc; box-sizing: border-box;
+}
+
+.form-actions {
+  margin-top: 30px; padding-top: 20px; border-top: 1px dashed #e2e8f0;
+  display: flex; justify-content: space-between; /* Spread buttons out */
+}
+
+/* Button Styles */
+.btn { padding: 10px 20px; border-radius: 8px; font-weight: 500; cursor: pointer; border: none; }
+.btn-primary { background: #0f172a; color: white; } /* Dark button for settings */
+.btn-secondary { background: white; border: 1px solid #cbd5e1; color: #ef4444; } /* Red text for reset */
