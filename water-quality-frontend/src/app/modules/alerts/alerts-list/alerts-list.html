@@ -14,7 +14,7 @@
       <thead>
         <tr>
           <th style="width: 80px">ID</th>
-          <th style="width: 150px">Severity</th>
+          <th style="width: 150px">Quality</th>
           <th>Message</th>
           <th style="width: 120px; text-align: center">Action</th>
         </tr>
@@ -26,12 +26,12 @@
             <span
               class="badge"
               [ngClass]="{
-                critical: a.severity.toLowerCase() === 'critical',
-                warning: a.severity.toLowerCase() === 'warning',
-                info: a.severity.toLowerCase() === 'info' || a.severity.toLowerCase() === 'normal'
+                critical: a.quality === 'Poor',
+                warning: a.quality === 'Moderate',
+                info: a.quality === 'Good'
               }"
             >
-              {{ a.severity }}
+              {{ a.quality }}
             </span>
           </td>
           <td>

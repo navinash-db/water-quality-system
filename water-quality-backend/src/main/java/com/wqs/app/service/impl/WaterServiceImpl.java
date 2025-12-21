@@ -8,9 +8,11 @@ import org.springframework.stereotype.Service;
 
 import com.wqs.app.dto.WaterRequest;
 import com.wqs.app.entity.Alert;
+import com.wqs.app.entity.ThresholdConfig;
 import com.wqs.app.entity.WaterReading;
 import com.wqs.app.repository.AlertRepository;
 import com.wqs.app.repository.WaterReadingRepository;
+import com.wqs.app.service.ConfigService; // Import ConfigService
 import com.wqs.app.service.WaterService;
 
 @Service
@@ -18,17 +20,42 @@ public class WaterServiceImpl implements WaterService {
 
     private final WaterReadingRepository repo;
     private final AlertRepository alertRepo;
+    private final ConfigService configService; // Inject ConfigService
 
-    public WaterServiceImpl(WaterReadingRepository repo, AlertRepository alertRepo) {
+    public WaterServiceImpl(WaterReadingRepository repo, AlertRepository alertRepo, ConfigService configService) {
         this.repo = repo;
         this.alertRepo = alertRepo;
+        this.configService = configService;
     }
 
     private String calculateQuality(double ph, double turbidity, double tds) {
-        if (ph < 5.5 || ph > 9.0 || turbidity > 10 || tds > 1000)
+        // Fetch dynamic thresholds
+        ThresholdConfig config = configService.getThresholds();
+
+        // Use defaults if config is missing to prevent errors
+        double phMin = (config != null) ? config.getPhMin() : 6.5;
+        double phMax = (config != null) ? config.getPhMax() : 8.5;
+        double turbMax = (config != null) ? config.getTurbidityMax() : 5.0;
+        double tdsMax = (config != null) ? config.getTdsMax() : 500.0;
+
+        // Derive Critical Limits (Poor) based on logic from original code
+        // Original: Poor if pH < 5.5 (1.0 below min) or > 9.0 (0.5 above max)
+        double phCriticalLow = phMin - 1.0;
+        double phCriticalHigh = phMax + 0.5;
+        // Original: Poor if Turbidity > 10 (2x max) or TDS > 1000 (2x max)
+        double turbCritical = turbMax * 2;
+        double tdsCritical = tdsMax * 2;
+
+        // 1. Check Poor (Critical)
+        if (ph < phCriticalLow || ph > phCriticalHigh || turbidity > turbCritical || tds > tdsCritical)
             return "Poor";
-        if ((ph >= 5.5 && ph < 6.5) || (ph > 8.0 && ph <= 9.0) || turbidity > 5 || tds > 500)
+
+        // 2. Check Moderate (Warning) - Inside critical but outside ideal
+        if ((ph >= phCriticalLow && ph < phMin) || (ph > phMax && ph <= phCriticalHigh) || turbidity > turbMax
+                || tds > tdsMax)
             return "Moderate";
+
+        // 3. Otherwise Good
         return "Good";
     }
 
@@ -46,16 +73,12 @@ public class WaterServiceImpl implements WaterService {
 
         WaterReading saved = repo.save(reading);
 
-        // AUTOMATIC ALERT GENERATION
         if ("Poor".equals(quality)) {
             Alert alert = new Alert();
-            // Match the fields in YOUR Alert.java
             alert.setMessage("Critical contamination detected at " + r.getLocation());
             alert.setLocation(r.getLocation());
             alert.setQuality("Poor");
             alert.setReadStatus(false);
-            // Timestamp is set automatically in Alert.java, so we don't set it here
-
             alertRepo.save(alert);
         }
 
@@ -99,14 +122,12 @@ public class WaterServiceImpl implements WaterService {
         String quality = calculateQuality(r.getPh(), r.getTurbidity(), r.getTds());
         reading.setQuality(quality);
 
-        // Check for alert on update too
         if ("Poor".equals(quality)) {
             Alert alert = new Alert();
             alert.setMessage("Updated reading shows critical levels at " + r.getLocation());
             alert.setLocation(r.getLocation());
             alert.setQuality("Poor");
             alert.setReadStatus(false);
-
             alertRepo.save(alert);
         }
 

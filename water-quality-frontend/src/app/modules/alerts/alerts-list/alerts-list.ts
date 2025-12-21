@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; // <-- 1. Import ChangeDetectorRef
 import { CommonModule } from '@angular/common';
-import { Navbar } from '../../../shared/navbar/navbar'; // Adjust path if needed
+import { Navbar } from '../../../shared/navbar/navbar';
 import { AlertService } from '../../../core/services/alert.service';
 
 @Component({
@@ -12,23 +12,32 @@ import { AlertService } from '../../../core/services/alert.service';
 })
 export class AlertsList implements OnInit {
 
-  // FIX: Define this as a simple array, NOT an Observable ($)
   alerts: any[] = []; 
   
-  // Modal State
   showModal = false;
   idToDelete: number | null = null;
 
-  constructor(private alertService: AlertService) {}
+  constructor(
+    private alertService: AlertService,
+    private cdr: ChangeDetectorRef // <-- 2. Inject it here
+  ) {}
 
   ngOnInit() {
     this.loadAlerts();
   }
 
   loadAlerts() {
-    // FIX: Subscribe here to get the data into the array
-    this.alertService.getAll().subscribe(res => {
-      this.alerts = res;
+    this.alertService.getAll().subscribe({
+      next: (res) => {
+        console.log('Alerts loaded:', res);
+        this.alerts = res;
+        
+        // <-- 3. FORCE UPDATE: Tell Angular to refresh the view immediately
+        this.cdr.detectChanges(); 
+      },
+      error: (err) => {
+        console.error('Error loading alerts:', err);
+      }
     });
   }
 
@@ -41,8 +50,8 @@ export class AlertsList implements OnInit {
     if (this.idToDelete === null) return;
     
     this.alertService.delete(this.idToDelete).subscribe(() => {
-      this.loadAlerts(); // Reload list
-      this.closeModal(); // Close modal
+      this.loadAlerts();
+      this.closeModal();
     });
   }
 
