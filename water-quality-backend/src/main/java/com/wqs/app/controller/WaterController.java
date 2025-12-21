@@ -3,7 +3,7 @@ package com.wqs.app.controller;
 import java.time.LocalDate;
 import java.util.List;
 
-import jakarta.validation.Valid; // Import this
+import jakarta.validation.Valid;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +14,8 @@ import com.wqs.app.service.WaterService;
 
 @RestController
 @RequestMapping("/api/water-readings")
-@CrossOrigin(origins = "*") // Allow frontend to access
+// @CrossOrigin(origins = "*") <-- REMOVE THIS LINE. It conflicts with
+// WebCorsConfig.
 public class WaterController {
 
     private final WaterService service;
@@ -25,7 +26,7 @@ public class WaterController {
 
     // ADD WATER READING
     @PostMapping
-    public WaterReading add(@Valid @RequestBody WaterRequest req) { // Added @Valid
+    public WaterReading add(@Valid @RequestBody WaterRequest req) {
         return service.addReading(req);
     }
 
@@ -54,7 +55,7 @@ public class WaterController {
     @PutMapping("/{id}")
     public WaterReading update(
             @PathVariable Long id,
-            @Valid @RequestBody WaterRequest request) { // Added @Valid
+            @Valid @RequestBody WaterRequest request) {
 
         return service.updateReading(id, request);
     }

@@ -13,11 +13,14 @@ import { Navbar } from '../../../shared/navbar/navbar';
 })
 export class AddReading {
 
-  ph = 0;
-  turbidity = 0;
-  tds = 0;
-  temperature = 0;
-  location = '';
+  // Fix: Group individual fields into a 'reading' object to match the HTML
+  reading = {
+    ph: 0,
+    turbidity: 0,
+    tds: 0,
+    temperature: 0,
+    location: ''
+  };
 
   constructor(
     private waterService: WaterService,
@@ -25,15 +28,8 @@ export class AddReading {
   ) {}
 
   addReading() {
-    const data = {
-      ph: this.ph,
-      turbidity: this.turbidity,
-      tds: this.tds,
-      temperature: this.temperature,
-      location: this.location
-    };
-
-    this.waterService.addReading(data).subscribe(
+    // Send the entire 'reading' object directly
+    this.waterService.addReading(this.reading).subscribe(
       () => {
         this.router.navigate(['/readings']);
       },

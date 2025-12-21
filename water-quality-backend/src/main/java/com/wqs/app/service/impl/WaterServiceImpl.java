@@ -7,7 +7,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.wqs.app.dto.WaterRequest;
+import com.wqs.app.entity.Alert;
 import com.wqs.app.entity.WaterReading;
+import com.wqs.app.repository.AlertRepository;
 import com.wqs.app.repository.WaterReadingRepository;
 import com.wqs.app.service.WaterService;
 
@@ -15,25 +17,18 @@ import com.wqs.app.service.WaterService;
 public class WaterServiceImpl implements WaterService {
 
     private final WaterReadingRepository repo;
+    private final AlertRepository alertRepo;
 
-    public WaterServiceImpl(WaterReadingRepository repo) {
+    public WaterServiceImpl(WaterReadingRepository repo, AlertRepository alertRepo) {
         this.repo = repo;
+        this.alertRepo = alertRepo;
     }
 
-    // Helper method to calculate quality (Centralized Logic)
     private String calculateQuality(double ph, double turbidity, double tds) {
-        // 1. CRITICAL CHECKS (POOR)
-        if (ph < 5.5 || ph > 9.0 || turbidity > 10 || tds > 1000) {
+        if (ph < 5.5 || ph > 9.0 || turbidity > 10 || tds > 1000)
             return "Poor";
-        }
-
-        // 2. WARNING CHECKS (MODERATE)
-        if ((ph >= 5.5 && ph < 6.5) || (ph > 8.0 && ph <= 9.0) ||
-                turbidity > 5 || tds > 500) {
+        if ((ph >= 5.5 && ph < 6.5) || (ph > 8.0 && ph <= 9.0) || turbidity > 5 || tds > 500)
             return "Moderate";
-        }
-
-        // 3. IDEAL (GOOD)
         return "Good";
     }
 
@@ -46,10 +41,25 @@ public class WaterServiceImpl implements WaterService {
         reading.setTemperature(r.getTemperature());
         reading.setLocation(r.getLocation());
 
-        // Use new logic
-        reading.setQuality(calculateQuality(r.getPh(), r.getTurbidity(), r.getTds()));
+        String quality = calculateQuality(r.getPh(), r.getTurbidity(), r.getTds());
+        reading.setQuality(quality);
 
-        return repo.save(reading);
+        WaterReading saved = repo.save(reading);
+
+        // AUTOMATIC ALERT GENERATION
+        if ("Poor".equals(quality)) {
+            Alert alert = new Alert();
+            // Match the fields in YOUR Alert.java
+            alert.setMessage("Critical contamination detected at " + r.getLocation());
+            alert.setLocation(r.getLocation());
+            alert.setQuality("Poor");
+            alert.setReadStatus(false);
+            // Timestamp is set automatically in Alert.java, so we don't set it here
+
+            alertRepo.save(alert);
+        }
+
+        return saved;
     }
 
     @Override
@@ -77,10 +87,8 @@ public class WaterServiceImpl implements WaterService {
     @Override
     public WaterReading updateReading(Long id, WaterRequest r) {
         WaterReading reading = repo.findById(id).orElse(null);
-
-        if (reading == null) {
+        if (reading == null)
             return null;
-        }
 
         reading.setPh(r.getPh());
         reading.setTurbidity(r.getTurbidity());
@@ -88,17 +96,27 @@ public class WaterServiceImpl implements WaterService {
         reading.setTemperature(r.getTemperature());
         reading.setLocation(r.getLocation());
 
-        // Use new logic
-        reading.setQuality(calculateQuality(r.getPh(), r.getTurbidity(), r.getTds()));
+        String quality = calculateQuality(r.getPh(), r.getTurbidity(), r.getTds());
+        reading.setQuality(quality);
+
+        // Check for alert on update too
+        if ("Poor".equals(quality)) {
+            Alert alert = new Alert();
+            alert.setMessage("Updated reading shows critical levels at " + r.getLocation());
+            alert.setLocation(r.getLocation());
+            alert.setQuality("Poor");
+            alert.setReadStatus(false);
+
+            alertRepo.save(alert);
+        }
 
         return repo.save(reading);
     }
 
     @Override
     public String deleteById(Long id) {
-        if (!repo.existsById(id)) {
+        if (!repo.existsById(id))
             return "Water reading not found";
-        }
         repo.deleteById(id);
         return "Water reading deleted successfully";
     }

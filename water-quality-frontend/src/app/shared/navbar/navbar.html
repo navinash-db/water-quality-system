@@ -1,7 +1,11 @@
 <nav class="navbar">
   <div class="nav-left">
     <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-    <a routerLink="/readings" routerLinkActive="active">Readings</a>
+
+    <a routerLink="/readings" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+      >Readings</a
+    >
+
     <a routerLink="/readings/add" routerLinkActive="active">Add Reading</a>
     <a routerLink="/alerts" routerLinkActive="active">Alerts</a>
     <a routerLink="/reports" routerLinkActive="active">Reports</a>

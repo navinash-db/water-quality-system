@@ -23,9 +23,7 @@
 <input type="month" [(ngModel)]="monthlyMonth" />
 <button (click)="loadMonthly()">View</button>
 <button (click)="exportMonthly()">Export CSV</button>
-<p *ngIf="!dailyReport && !monthlyReport">
-  Select a date or month to view report.
-</p>
+<p *ngIf="!dailyReport && !monthlyReport">Select a date or month to view report.</p>
 
 <div *ngIf="monthlyReport">
   <p>Month: {{ monthlyReport.month }}</p>
